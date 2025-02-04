@@ -150,7 +150,7 @@ int remove_completed_lines(char board[MAX_ROWS][MAX_COLUMNS]){
 void init_game_state(GameState *game_state){
     game_state -> score = 0;
     void print_board();
-    //SET THE BOARD TO '.'
+                                                        //SET THE BOARD TO '.'
     for (int r = 0; r < MAX_ROWS; ++r) {
         for (int c = 0; c < MAX_COLUMNS; ++c) {
             game_state->board[r][c] = '.';
@@ -161,7 +161,6 @@ void init_game_state(GameState *game_state){
 
 bool is_terminal(char board[MAX_ROWS][MAX_COLUMNS])
 {
-    
      for (int r = 0; r < MAX_ROWS; ++r) {
         for (int c = 0; c < 4; ++c) 
         {
