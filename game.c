@@ -87,10 +87,9 @@ void get_new_random_piece(GameState *game_state){
         rotate_clockwise(&(game_state->current_piece.p));
 
     // Random location
-    game_state->current_piece.at_row = 4 - game_state->current_piece.at_row;
-    game_state->current_piece.at_col = rand() % (MAX_COLUMNS + 1 - game_state->current_piece.at_col);
+    game_state->current_piece.at_row = 4 - game_state->current_piece.p.rows;
+    game_state->current_piece.at_col = rand() % (MAX_COLUMNS + 1 - game_state->current_piece.p.cols);
 }
-
 void block_current_piece(GameState *game_state){
     Piece *piece = &game_state->current_piece.p;
     int row = game_state->current_piece.at_row;
@@ -148,14 +147,14 @@ int remove_completed_lines(char board[MAX_ROWS][MAX_COLUMNS]){
 /********************************************************/
 
 void init_game_state(GameState *game_state){
-    game_state -> score = 0;
-    void print_board();
+    game_state->score = 0;
                                                         //SET THE BOARD TO '.'
     for (int r = 0; r < MAX_ROWS; ++r) {
         for (int c = 0; c < MAX_COLUMNS; ++c) {
             game_state->board[r][c] = '.';
         }
     }
+	get_new_random_piece(game_state);
 }
 
 

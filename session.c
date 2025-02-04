@@ -6,8 +6,8 @@ void restart_session_game_state(Session *session)
 }
 
 void init_session(Session *session){
-    restart_session_game_state(&session);
-    session->current_game_state.score = 0;
+    session->best_score = 0;
+    restart_session_game_state(session);
     
 }
 
