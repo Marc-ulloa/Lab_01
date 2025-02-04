@@ -19,7 +19,7 @@ typedef struct{
     int score;
     char board[MAX_ROWS][MAX_COLUMNS];
     PieceInfo current_piece;
-} GameState;
+}GameState;
 
 /// Implemented functions
 void print_game_state(GameState *gs);
