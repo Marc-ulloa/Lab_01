@@ -4,9 +4,11 @@
 #include "game.h"
 
 /// LAB 1 - data structure
-typedef struct{
-    // ToDo in LAB 1 - define data structure
-} Session;
+typedef struct
+{
+	int best_score;
+	GameState current_game_state;
+}Session;
 
 /// LAB 1 - functions 
 void restart_session_game_state(Session *session);

@@ -4,7 +4,7 @@
 #include "common.h"
 #include "utils.h"
 #include "pieces.h"
-
+#include "session.h"
 #define MAX_ROWS 15
 #define MAX_COLUMNS 12
 

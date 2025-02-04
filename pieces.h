@@ -2,7 +2,6 @@
 #define __PIECES_H__
 
 #include "common.h"
-
 #define MAX_NUM_PIECES 7
 #define PIECE_SIZE 4
 
@@ -13,11 +12,7 @@ typedef struct
 	int rows, cols;
 } Piece;
 
-typedef struct
-{
-	int best_score;
-	GameState current_game_state;
-}Session
+
 // Lab 1 - initialize, print, rotate and make pieces
 void init_piece(Piece *p);
 void print_piece(Piece p);

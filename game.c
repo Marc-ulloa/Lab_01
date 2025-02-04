@@ -213,6 +213,8 @@ void rotate_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int 
         }
     }
 }
+
+
 /********************************************************/
 /******* LAB 1 - functions to program (end here) ********/
 /********************************************************/
