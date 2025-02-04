@@ -176,12 +176,42 @@ bool is_terminal(char board[MAX_ROWS][MAX_COLUMNS])
     
 
 
-void move_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int option){
-    // ToDo in LAB 1
-}
+void move_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info,
+                int option) {
+  int dir = 0;
+  if (option == MOVE_LEFT)
+    dir = -1;
+  else if (option == MOVE_RIGHT)
+    dir = 1;
+  else {
+    printf("[ERROR] Invalid move option %d.\n", option);
+    return;
+  }
+
+  int new_col = piece_info->at_col + dir;
+  if (new_col >= 0 && new_col < MAX_COLUMNS &&
+      board[piece_info->at_row][new_col] == '.') {
+    piece_info->at_col = new_col;
+  } else {
+    printf("[ERROR] Collision or out of bounds.\n");
+ }
+};
 
 void rotate_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int option){
-    // ToDo in LAB 1
+        if (option == ROTATE_CW){
+            rotate_clockwise(&piece_info->p);
+        }
+        else{
+            rotate_counter_clockwise(&piece_info->p);
+        }
+    
+    if (is_collision(game_state->board, p_inf)){
+        if (option == ROTATE_CW){
+            rotate_counter_clockwise(&piece_info->p);}
+    else{
+        rotate_clockwise(&piece_info->p);
+        }
+    }
 }
 /********************************************************/
 /******* LAB 1 - functions to program (end here) ********/
