@@ -17,8 +17,8 @@ typedef struct{
 
 typedef struct{
     int score;
-    char board[MAX_ROWS][MAX_COLUMNS]
-
+    char board[MAX_ROWS][MAX_COLUMNS];
+    PieceInfo current_piece;
 } GameState;
 
 /// Implemented functions

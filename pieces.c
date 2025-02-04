@@ -46,7 +46,7 @@ Piece make_O(){
     piece.name = 'O'; piece.rows = piece.cols = 2;
     piece.board[0][0] = '#'; piece.board[0][1] = '#';
     piece.board[0][1] = '#'; piece.board[1][1] = '#';;
-    return piece
+    return piece;
 }
 
 Piece make_I(){
@@ -55,7 +55,7 @@ Piece make_I(){
     for(int i=0; i<4; ++i){
     piece.board[i][0] = '#';
     }
-    return piece
+    return piece;
 }
 
 
@@ -64,7 +64,7 @@ Piece make_S(){                                             //creating the S pie
     piece.name = 'S'; piece.rows = 2; piece.cols = 3;
     piece.board[0][1] = '#'; piece.board[0][2] = '#';
     piece.board[1][0] = '#'; piece.board[1][2] = '#'; 
-    return piece
+    return piece;
 }
 
 
@@ -73,7 +73,7 @@ Piece make_Z(){                                             //creating the Z pie
     piece.name = 'Z'; piece.rows = 2; piece.cols = 3;
     piece.board[0][0] = '#'; piece.board[0][1] = '#';
     piece.board[1][1] = '#'; piece.board[1][2] = '#';
-    return piece
+    return piece;
 }
 
 Piece make_L(){                                             //creating the L piece starting top left

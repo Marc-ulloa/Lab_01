@@ -87,8 +87,8 @@ void get_new_random_piece(GameState *game_state){
         rotate_clockwise(&(game_state->current_piece.p));
 
     // Random location
-    game_state->current_piece.at_row = 4 - game_state->current_piece.p.rows;
-    game_state->current_piece.at_col = rand() % (MAX_COLUMNS + 1 - game_state->current_piece.p.cols);
+    game_state->current_piece.at_row = 4 - game_state->current_piece.at_row;
+    game_state->current_piece.at_col = rand() % (MAX_COLUMNS + 1 - game_state->current_piece.at_col);
 }
 
 void block_current_piece(GameState *game_state){
@@ -205,7 +205,7 @@ void rotate_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int 
             rotate_counter_clockwise(&piece_info->p);
         }
     
-    if (is_collision(game_state->board, p_inf)){
+	if(is_collision(board, piece_info)){
         if (option == ROTATE_CW){
             rotate_counter_clockwise(&piece_info->p);}
     else{
