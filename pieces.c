@@ -1,7 +1,13 @@
 #include <pieces.h>
 
 void init_piece(Piece *p){
-	// ToDo in LAB 1
+	p->rows = 0;
+    p->cols = 0;
+    for (int i = 0; i<PIECE_SIZE; ++i){
+        for(int j=0; j<PIECE_SIZE; ++i){
+            p->board[i][j] = '.';
+        }
+    }
 }
 
 void print_piece(Piece p){
