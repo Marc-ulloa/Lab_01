@@ -9,7 +9,7 @@
 #define MAX_COLUMNS 12
 
 typedef struct{
-    char p;
+    Piece p;
     int at_row;
     int at_col;
 
