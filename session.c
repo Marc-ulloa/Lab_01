@@ -1,13 +1,11 @@
 #include "session.h"
 
-void restart_session_game_state(Session *session)
+void restart_session_game_state(GameState *gs)
 {
-    init_game_state(&session->current_game_state);
+    restart_game_state(gs);
 }
 
-void init_session(Session *session){
+void init_session(Session *session, GameState *gs){
     session->best_score = 0;
-    restart_session_game_state(session);
-    
+    init_game_state(gs);
 }
-

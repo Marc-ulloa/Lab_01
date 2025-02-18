@@ -23,8 +23,8 @@ bool is_valid_option(int option){
 }
 
 
-void print_line(){
-    for(int c=-1; c<MAX_COLUMNS+1; ++c) 
+void print_line(int columns){
+    for(int c=-1; c<MIN_COLUMNS+1; ++c) 
     	printf("-");    
     printf("\n");
 }
@@ -35,11 +35,11 @@ void print_board(GameState *game_state){
     int p_col_size = piece->cols;
     int current_row = game_state->current_piece.at_row;
     int current_col = game_state->current_piece.at_col;
-    print_line();
-    for(int r = 0; r < MAX_ROWS; ++r){
-        if(r == 4) print_line();
+    print_line(int columns);
+    for(int r = 0; r < MIN_ROWS; ++r){
+        if(r == 4) print_line(int columns);
         printf("|");
-        for(int c=0; c < MAX_COLUMNS; ++c){
+        for(int c=0; c < MIN_COLUMNS; ++c){
             if((game_state->board[r][c] == '.') &&
                (current_row <= r) && (r < current_row + p_row_size) && 
                (current_col <= c) && (c < current_col + p_col_size)){
@@ -49,7 +49,7 @@ void print_board(GameState *game_state){
         }
         printf("|\n");
     }
-    print_line();
+    print_line(int columns);
     printf("\n");
 }
 
@@ -88,7 +88,7 @@ void get_new_random_piece(GameState *game_state){
 
     // Random location
     game_state->current_piece.at_row = 4 - game_state->current_piece.p.rows;
-    game_state->current_piece.at_col = rand() % (MAX_COLUMNS + 1 - game_state->current_piece.p.cols);
+    game_state->current_piece.at_col = rand() % (MIN_COLUMNS + 1 - game_state->current_piece.p.cols);
 }
 void block_current_piece(GameState *game_state){
     Piece *piece = &game_state->current_piece.p;
@@ -100,14 +100,14 @@ void block_current_piece(GameState *game_state){
                 game_state->board[row+i][col+j] = 'X';
 }
 
-bool is_collision(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info){
+bool is_collision(GameState *gs){
     Piece *piece = &piece_info->p;
     int p_row_size = piece->rows;
     int p_col_size = piece->cols;
     int row = piece_info->at_row;
     int col = piece_info->at_col;
 
-    if((row < 0) || (col < 0) || (row+p_row_size-1 >= MAX_ROWS) || (col+p_col_size-1 >= MAX_COLUMNS))
+    if((row < 0) || (col < 0) || (row+p_row_size-1 >= MIN_ROWS) || (col+p_col_size-1 >= MIN_COLUMNS))
     	return true; // piece is out of the grid bounds
     
     for(int i=0; i<piece->rows; ++i)
@@ -118,12 +118,12 @@ bool is_collision(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info){
     return false;
 }
 
-int remove_completed_lines(char board[MAX_ROWS][MAX_COLUMNS]){
+int remove_completed_lines(char board[MIN_ROWS][MIN_COLUMNS]){
     int lines = 0;
     bool completed_line;
-    for(int r=4; r<MAX_ROWS; ++r){
+    for(int r=4; r<MIN_ROWS; ++r){
         completed_line = true;
-        for(int c=0; c<MAX_COLUMNS; ++c){
+        for(int c=0; c<MIN_COLUMNS; ++c){
             if(board[r][c] != 'X'){
                 completed_line = false; 
                 break;
@@ -133,7 +133,7 @@ int remove_completed_lines(char board[MAX_ROWS][MAX_COLUMNS]){
             ++lines;
             // Move all rows above, once down
             for(int r2=r; r2>3; --r2){
-                for(int c=0; c<MAX_COLUMNS; ++c){
+                for(int c=0; c<MIN_COLUMNS; ++c){
                     board[r2][c] = board[r2-1][c];
                 }
             }
@@ -147,20 +147,17 @@ int remove_completed_lines(char board[MAX_ROWS][MAX_COLUMNS]){
 /********************************************************/
 
 void init_game_state(GameState *game_state){
-    game_state->score = 0;
-                                                        //SET THE BOARD TO '.'
-    for (int r = 0; r < MAX_ROWS; ++r) {
-        for (int c = 0; c < MAX_COLUMNS; ++c) {
-            game_state->board[r][c] = '.';
-        }
-    }
-	get_new_random_piece(game_state);
+    game_state->board = NULL;
+    game_state->rows = MIN_ROWS;
+    game_state->columns = MIN_COLUMNS;                                               //SET THE BOARD TO '.' 
+    make_board(game_state, MIN_ROWS, MIN_COLUMNS);
+    set_default_game_state(game_state);
 }
 
 
-bool is_terminal(char board[MAX_ROWS][MAX_COLUMNS])
+bool is_terminal(GameState * gs)
 {
-     for (int r = 0; r < MAX_ROWS; ++r) {
+     for (int r = 0; r < MIN_ROWS; ++r) {
         for (int c = 0; c < 4; ++c) 
         {
             if(board[r][c] == 'X')
@@ -174,8 +171,7 @@ bool is_terminal(char board[MAX_ROWS][MAX_COLUMNS])
     
 
 
-void move_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info,
-                int option) {
+void move_piece(GameState * gs, int option) {
   int dir = 0;
   if (option == MOVE_LEFT)
     dir = -1;
@@ -187,7 +183,7 @@ void move_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info,
   }
 
   int new_col = piece_info->at_col + dir;
-  if (new_col >= 0 && new_col < MAX_COLUMNS &&
+  if (new_col >= 0 && new_col < MIN_COLUMNS &&
       board[piece_info->at_row][new_col] == '.') {
     piece_info->at_col = new_col;
   } else {
@@ -195,19 +191,19 @@ void move_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info,
  }
 };
 
-void rotate_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int option){
+void rotate_piece(GameState * gs, int option){
         if (option == ROTATE_CW){
-            rotate_clockwise(&piece_info->p);
+            rotate_clockwise(&gs->current_piece.p);
         }
         else{
-            rotate_counter_clockwise(&piece_info->p);
+            rotate_counter_clockwise(&gs->current_piece.p);
         }
     
-	if(is_collision(board, piece_info)){
+	if(is_collision(gs)){
         if (option == ROTATE_CW){
-            rotate_counter_clockwise(&piece_info->p);}
+            rotate_counter_clockwise(&gs->current_piece.p);}
     else{
-        rotate_clockwise(&piece_info->p);
+        rotate_clockwise(&gs->current_piece.p);
         }
     }
 }
@@ -224,7 +220,7 @@ void rotate_piece(char board[MAX_ROWS][MAX_COLUMNS], PieceInfo *piece_info, int 
 void run_turn(GameState *game_state, int option){
 	PieceInfo *p_inf = &(game_state->current_piece);
 	if(option == MOVE_LEFT || option == MOVE_RIGHT) 
-		move_piece(game_state->board, p_inf, option);
+		move_piece(gs, p_inf, option);
 	else if(option == ROTATE_CW || option == ROTATE_CCW)
 		rotate_piece(game_state->board, p_inf, option);
     else if(option == NONE){} // do nothing
@@ -243,3 +239,37 @@ void run_turn(GameState *game_state, int option){
 	}
 }
 
+void make_board(GameState *gs, int rows, int columns){
+    gs->board = (char*)realloc( gs, columns * rows * sizeof(char));
+}
+
+void free_game_state(GameState *gs){
+    if(gs->board == NULL){
+        return;
+    }
+    else{
+        free(gs->board);
+    }
+    return;
+}
+
+void set_default_game_state(GameState *gs){
+    gs->score = 0;
+    for (int i=0; i >= MIN_ROWS; i++){
+        for( int j=0; j>= MAX_ROWS; j++){
+            gs->board[i][j] = '.';
+        }
+    }
+    get_new_random_piece(gs);
+    return;
+}
+
+void restart_game_state(GameState * gs, int rows, int columns){
+    int rows, cols;
+    printf("Type de number of rows ( must be > %d)", MIN_ROWS);
+    scanf("%d", &rows);
+    pritnf("Type de number of columns (must be > %d)", MIN_COLUMNS);
+    scanf("%d",&columns);
+    make_board(gs, rows, columns);
+    set_default_game_state(gs);
+}

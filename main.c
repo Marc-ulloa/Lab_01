@@ -34,7 +34,7 @@ void run_game(Session *session){
         session->best_score = max(session->best_score, game_state->score);
         
         // 5. Add new number
-        finish_game = is_terminal(game_state->board);
+        finish_game = is_terminal(game_state);
     }while(!finish_game);
 
     printf("*** GAME OVER ***\n");
@@ -47,11 +47,53 @@ void new_game(Session *session){
 }
 
 void save_game(Session *session){
-    // ToDo in Lab 2
+    char file_name[30];
+    printf("Name the final of the saved game: ");
+    scanf("%s", file_name);
+
+    FILE *pf = openf(file_name, "w");
+
+    GameState *gs = &session->current_game_state;
+    PieceInfo *piece = &gs->current_piece;
+    fprintf(pf, "Score: %d", gs->score);
+    fprintf(pf, "\nCurrent Piece Info: \n");
+    fprintf(pf, "Position: %d %d \n", piece->at_row, piece->at_col);
+    fprintf(pf, "Piece Display:\n");
+    
+    for (int i = 0; i<4; i++){
+        for (int j = 0; j < 4; j++){
+            fputc(piece->p.board[i][j], pf);
+        }
+        fputc('\n', pf);
+    }
+    fprintf(pf, "Board Dimension: %d, %d\n", gs->rows, gs->columns);
+    fprintf(pf, "Board Display: \n");
+    
+    for(int i = 0; i < gs->rows; i++){
+        for(int j = 0; i < gs->columns; i++){
+            fputc(gs->board[i][j], pf);
+        }
+        fputc("\n",pf);
+    }
+    fclose(pf);
 }
 
 void load_game(Session *session){
-    // ToDo in Lab 2
+    char file_name[30];
+    print("Enter the filename to load the game: ");
+    scanf("%s", file_name);
+    if (file_name == NULL){
+        fprintf("Error opening for file name: %s", file_name);
+        return;
+    }
+    GameState * gs = &session->current_game_state;
+    FILE * pf = fopen(file_name, "r");
+    PieceInfo *piece = &gs->current_piece;
+    fscanf(pf, "Score: %d\n", &gs->score);
+    fscanf(pf, "Current Piece Info:\n");
+    fscanf(pf, "Positions: %d %d", &piece->at_row, &piece->at_col);
+    fscanf(pf, )
+
 }
 
 void resume_game(Session *session){
