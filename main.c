@@ -13,7 +13,7 @@ void run_game(Session *session){
         // 2. Select a move
         int game_option;
         do{
-            print_options(game_state->board);
+            print_options();
             printf("Enter a game option: ");
             game_option = read_int();
         }while(!is_valid_option(game_option));
@@ -49,9 +49,9 @@ void new_game(Session *session){
 void save_game(Session *session){
     char file_name[30];
     printf("Name the final of the saved game: ");
-    scanf("%s", file_name);
+    scanf("%29s", file_name);
 
-    FILE *pf = openf(file_name, "w");
+    FILE *pf = fopen(file_name, "w");
 
     GameState *gs = &session->current_game_state;
     PieceInfo *piece = &gs->current_piece;
@@ -66,38 +66,60 @@ void save_game(Session *session){
         }
         fputc('\n', pf);
     }
-    fprintf(pf, "Board Dimension: %d, %d\n", gs->rows, gs->columns);
+    fprintf(pf, "Board Dimension: %d, %d\n", &gs->rows, &gs->columns);  
     fprintf(pf, "Board Display: \n");
     
     for(int i = 0; i < gs->rows; i++){
-        for(int j = 0; i < gs->columns; i++){
+        for(int j = 0; j < gs->columns; j++){
             fputc(gs->board[i][j], pf);
         }
-        fputc("\n",pf);
+        fputc('\n',pf);
     }
     fclose(pf);
 }
 
 void load_game(Session *session){
     char file_name[30];
-    print("Enter the filename to load the game: ");
-    scanf("%s", file_name);
-    if (file_name == NULL){
-        fprintf("Error opening for file name: %s", file_name);
+    printf("Enter the filename to load the game: ");
+    scanf("%29s", file_name);
+    FILE * pf = fopen(file_name, "r"); //Checking if file exists
+    if (pf == NULL){
+        printf("Error opening for file name: %s", file_name);
         return;
     }
     GameState * gs = &session->current_game_state;
-    FILE * pf = fopen(file_name, "r");
     PieceInfo *piece = &gs->current_piece;
     fscanf(pf, "Score: %d\n", &gs->score);
     fscanf(pf, "Current Piece Info:\n");
-    fscanf(pf, "Positions: %d %d", &piece->at_row, &piece->at_col);
-    fscanf(pf, )
+    fscanf(pf, "Position: %d %d\n", &piece->at_row, &piece->at_col);
+    fscanf(pf, "Piece Display:\n");
+    Piece * p = &piece->p;
+    for (int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            fscanf(pf, "%c", &p->board[i][j]);
+        }
+        fscanf(pf, "\n");
+    }
+    fscanf(pf, "Board Dimension: %d, %d\n", &gs->rows, &gs->columns);
+    fscanf(pf, "Board Display: \n");
+    for (int i = 0; i < gs->rows; i++){
+        for (int j = 0; j < gs->columns; j++){
+            fscanf(pf, " %c", &gs->board[i][j]);
+        }
+        fscanf(pf, "\n");
+    }
 
+    fclose(pf);
+    return;
 }
 
 void resume_game(Session *session){
-    // ToDo in Lab 2
+    GameState *gs = &session->current_game_state;
+    if (is_terminal(gs)){
+        printf("Cannor resume game since it's over!");
+        return;
+    }
+    run_game(session);
 }
 
 void print_menu(){
